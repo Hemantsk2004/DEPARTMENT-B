@@ -33,7 +33,7 @@ mongoose_1.default
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.error("MongoDB connection error:", err));
 const port = process.env.PORT || 4000;
-app.listen(port, () => {
+app.listen(PORT, () => {
     console.log(`Server listening at port: ${port}`);
 });
 exports.default = app;
