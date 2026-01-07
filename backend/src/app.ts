@@ -62,9 +62,9 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-const port = process.env.PORT || 4000;
-app.listen(port, () => {
-  console.log(`Server listening at port: ${port}`);
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server listening at port: ${PORT}`);
 });
 
 export default app;

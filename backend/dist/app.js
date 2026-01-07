@@ -32,9 +32,12 @@ mongoose_1.default
     .connect(process.env.MONGODB_URI)
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.error("MongoDB connection error:", err));
-const port = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4000;
+
 app.listen(PORT, () => {
-    console.log(`Server listening at port: ${port}`);
+  console.log(`Server listening at port: ${PORT}`);
 });
 exports.default = app;
 //# sourceMappingURL=app.js.map
+
+
