@@ -6,7 +6,14 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "outDir": "dist",
-    "typeRoots": ["./src/@types", "./node_modules/@types"],
+    "typeRoots": [
+      "./src/@types",
+      "./node_modules/@types"
+    ],
     "lib": ["es2015"]
-  }
+  },
+  "exclude": [
+    "src/context",
+    "**/*.tsx"
+  ]
 }
