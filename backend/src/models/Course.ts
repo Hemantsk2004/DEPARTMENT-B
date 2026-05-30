@@ -1,26 +1,34 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { User } from "./User";
-import { Material } from "./Material";
 
 export interface ICourse extends Document {
   title: string;
   courseCode: string;
   description: string;
-  lecturer: Schema.Types.ObjectId | typeof User;
-  students: (Schema.Types.ObjectId | typeof User)[];
-  materials: (Schema.Types.ObjectId | typeof Material)[];
+
+  lecturer: Schema.Types.ObjectId;
+
+  students: Schema.Types.ObjectId[];
+
+  materials: Schema.Types.ObjectId[];
+
+  lectures: Schema.Types.ObjectId[];
+
+  announcements: Schema.Types.ObjectId[];
+
   createdAt: Date;
   updatedAt: Date;
 }
 
-const courseSchema = new Schema(
+const courseSchema = new Schema<ICourse>(
   {
-    title: { type: String, required: true },
-    courseCode: { type: String, required: true, unique: true },
-    description: { type: String, required: true },
+    title: { type: String, required: true, trim: true },
+    courseCode: { type: String, required: true, unique: true, trim: true, uppercase: true },
+    description: { type: String, required: true, trim: true },
     lecturer: { type: Schema.Types.ObjectId, ref: "User", required: true },
     students: [{ type: Schema.Types.ObjectId, ref: "User" }],
     materials: [{ type: Schema.Types.ObjectId, ref: "Material" }],
+    lectures: [{type: Schema.Types.ObjectId,ref: "Lecture"}],
+    announcements: [{type: Schema.Types.ObjectId,ref: "Announcement"}],
   },
   { timestamps: true }
 );

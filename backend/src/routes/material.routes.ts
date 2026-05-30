@@ -9,14 +9,14 @@ import upload from "../middlewares/uploadMiddleware";
 
 const router = express.Router();
 
+router.get("/:courseId", authenticate, getMaterialsByCourse);
 router.post(
   "/:courseId",
   authenticate,
-  authorize(["lecturer"]),
+  authorize(["lecturer", "admin"]), // Fix: admin can upload too
   upload.single("file"),
   uploadMaterial
 );
-router.get("/:courseId", authenticate, getMaterialsByCourse);
 router.delete(
   "/:id",
   authenticate,

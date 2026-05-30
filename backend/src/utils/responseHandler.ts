@@ -1,11 +1,5 @@
 import { Response } from "express";
 
-interface ApiResponse {
-  success: boolean;
-  message: string;
-  data: any;
-}
-
 export const sendResponse = (
   res: Response,
   statusCode: number,
@@ -13,10 +7,5 @@ export const sendResponse = (
   message: string,
   data: any = null
 ) => {
-  const response: ApiResponse = {
-    success,
-    message,
-    data,
-  };
-  return res.status(statusCode).json(response);
+  return res.status(statusCode).json({ success, message, data });
 };

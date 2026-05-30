@@ -6,65 +6,81 @@ import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
 import courseRoutes from "./routes/course.routes";
 import materialRoutes from "./routes/material.routes";
+import opportunityRoutes from "./routes/opportunity.routes";
+import portfolioRoutes from "./routes/portfolio.routes";
+import path from "path";
+import aiRoutes from "./routes/ai.routes";
+import announcementRoutes from "./routes/announcement.routes";
+import lectureRoutes from "./routes/lecture.routes";
 
 dotenv.config();
-
 const app = express();
 
 app.get("/", (_req, res) => {
   res.json({
-    message: "Welcome to Campus connect Backend API",
+    message: "Welcome to CampusLink X Backend API",
+    version: "1.0.0",
+    status: "running",
   });
 });
 
-// Middleware
+// CORS
 const allowedOrigins = [
   /^http:\/\/localhost:\d+$/,
-  process.env.FRONTEND_URL || "https://department-ms.vercel.app",
+  process.env.FRONTEND_URL || "https://campuslink-x.vercel.app",
 ];
 
 app.use(
   cors({
-    origin: (origin: string, callback: (arg0: Error, arg1: boolean) => any) => {
-      // Allow requests with no origin (like mobile apps or curl requests)
+    origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-
-      // Check if the origin is allowed
-      const isAllowed = allowedOrigins.some((allowedOrigin) =>
-        allowedOrigin instanceof RegExp
-          ? allowedOrigin.test(origin)
-          : allowedOrigin === origin
+      const isAllowed = allowedOrigins.some((allowed) =>
+        allowed instanceof RegExp ? allowed.test(origin) : allowed === origin
       );
-
-      if (isAllowed) {
-        return callback(null, true);
-      } else {
-        return callback(new Error("CORS not allowed"), false);
-      }
+      if (isAllowed) return callback(null, true);
+      return callback(new Error("CORS not allowed"), false);
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
+app.use(express.urlencoded({ extended: true }));
+app.use("/uploads",express.static(path.join(__dirname, "../uploads")));
 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/materials", materialRoutes);
+app.use("/api/opportunities", opportunityRoutes);
+app.use("/api/portfolio", portfolioRoutes);
+app.use("/api/ai", aiRoutes);
+app.use("/api/announcements",announcementRoutes);
+app.use("/api/lectures",lectureRoutes);
+
+// 404 handler
+app.use((_req, res) => {
+  res.status(404).json({ success: false, message: "Route not found" });
+});
+
+// Global error handler
+app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error("Global error:", err);
+  res.status(500).json({ success: false, message: err.message || "Internal server error" });
+});
 
 // Database connection
 mongoose
   .connect(process.env.MONGODB_URI as string)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Server listening at port: ${PORT}`);
+const PORT = process.env.PORT || 5000;
+
+const server = app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
-
 export default app;
