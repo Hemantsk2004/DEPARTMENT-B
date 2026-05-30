@@ -13,6 +13,7 @@ import aiRoutes from "./routes/ai.routes";
 import announcementRoutes from "./routes/announcement.routes";
 import lectureRoutes from "./routes/lecture.routes";
 
+
 dotenv.config();
 const app = express();
 
