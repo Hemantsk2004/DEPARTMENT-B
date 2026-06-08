@@ -73,15 +73,22 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
   res.status(500).json({ success: false, message: err.message || "Internal server error" });
 });
 
-console.log("MONGO URI =", process.env.MONGODB_URI);
 // Database connection
+// Database connection and server startup
+const PORT = process.env.PORT || 5000;
+
 mongoose
   .connect(process.env.MONGODB_URI as string)
-  .then(() => console.log("✅ Connected to MongoDB"))
-  .catch((err) =>
-    console.error(
-      "❌ MongoDB connection error:",
-      err
-    )
-  );
+  .then(() => {
+    console.log("✅ Connected to MongoDB");
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+    process.exit(1);
+  });
+
 export default app;
