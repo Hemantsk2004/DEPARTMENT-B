@@ -8,7 +8,6 @@ dotenv.config();
 const createAdminUser = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI as string);
-    hashPassword;
 
     const hashedPassword = await hashPassword("password");
 
@@ -20,6 +19,7 @@ const createAdminUser = async () => {
     });
 
     await adminUser.save();
+
     console.log("Admin user created successfully");
   } catch (error) {
     console.error("Error creating admin user:", error);
