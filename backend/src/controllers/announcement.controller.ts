@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
-import {Announcement} from "../models/Announcement";
+import { Announcement } from "../models/Announcement";
+import { User } from "../models/User";
+import { createNotification } from "../utils/createNotification";
 
 export const createAnnouncement =
   async (
@@ -13,6 +15,24 @@ export const createAnnouncement =
           createdBy:
             req.user?.userId,
         });
+
+      // Create notifications for all students
+      const students =
+        await User.find({
+          role: "student",
+        });
+
+      for (const student of students) {
+        await createNotification(
+          student._id.toString(),
+
+          "New Announcement",
+
+          announcement.title,
+
+          "announcement"
+        );
+      }
 
       res.status(201).json({
         success: true,

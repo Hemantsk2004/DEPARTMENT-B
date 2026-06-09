@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import Opportunity from "../models/Opportunity";
+import { User } from "../models/User";
+import { createNotification } from "../utils/createNotification";
 
 export const createOpportunity = async (
   req: Request,
@@ -10,7 +12,22 @@ export const createOpportunity = async (
       ...req.body,
       createdBy: req.user?.userId,
     });
+const users =
+  await User.find();
 
+for (const user of users) {
+
+  await createNotification(
+    user._id.toString(),
+
+    "New Opportunity",
+
+    opportunity.title,
+
+    "opportunity"
+  );
+
+}
     res.status(201).json({
       success: true,
       message: "Opportunity created successfully",

@@ -14,6 +14,7 @@ import announcementRoutes from "./routes/announcement.routes";
 import lectureRoutes from "./routes/lecture.routes";
 import assignmentRoutes from "./routes/assignment.routes";
 import submissionRoutes from "./routes/submission.routes";
+import notificationRoutes from "./routes/notification.routes";
 
 
 dotenv.config();
@@ -65,6 +66,8 @@ app.use("/api/announcements",announcementRoutes);
 app.use("/api/lectures",lectureRoutes);
 app.use("/api/assignments",assignmentRoutes);
 app.use("/api/submissions",submissionRoutes);
+app.use("/api/notifications",notificationRoutes);
+
 
 // 404 handler
 app.use((_req, res) => {

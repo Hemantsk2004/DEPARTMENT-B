@@ -3,6 +3,11 @@ import { Material } from "../models/Material";
 import { Course } from "../models/Course";
 import { sendResponse } from "../utils/responseHandler";
 import fs from "fs";
+import { createNotification }
+from "../utils/createNotification";
+
+import { User }
+from "../models/User";
 
 export const uploadMaterial: RequestHandler = async (req, res) => {
   try {
@@ -35,6 +40,24 @@ export const uploadMaterial: RequestHandler = async (req, res) => {
     });
 
     await material.save();
+    const students =
+  await User.find({
+    role: "student",
+  });
+
+for (const student of students) {
+
+  await createNotification(
+    student._id.toString(),
+
+    "New Material",
+
+    `${material.title} uploaded`,
+
+    "material"
+  );
+
+}
 
     await Course.findByIdAndUpdate(courseId, {
       $addToSet: { materials: material._id },

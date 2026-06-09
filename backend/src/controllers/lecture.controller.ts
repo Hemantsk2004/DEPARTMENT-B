@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import Lecture from "../models/Lecture";
+import { User } from "../models/User";
+import { createNotification } from "../utils/createNotification";
 
 export const createLecture =
   async (
@@ -13,6 +15,20 @@ export const createLecture =
           createdBy:
             req.user?.userId,
         });
+
+        const students =
+          await User.find({
+            role: "student",
+          });
+
+        for (const student of students) {
+          await createNotification(
+            student._id.toString(),
+            "New Lecture",
+            lecture.title,
+            "lecture"
+          );
+        } 
 
       res.status(201).json({
         success: true,
@@ -41,7 +57,7 @@ export const getLectures =
             req.params.courseId,
         }).sort({
           createdAt: -1,
-        });
+        });  
 
       res.status(200).json({
         success: true,

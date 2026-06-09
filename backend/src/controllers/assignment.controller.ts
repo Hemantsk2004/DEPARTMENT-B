@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { Assignment } from "../models/Assignment";
 import { Course } from "../models/Course";
+import { createNotification } from "../utils/createNotification";
+import { User } from "../models/User";
 
 export const createAssignment = async (
   req: Request,
@@ -21,6 +23,26 @@ export const createAssignment = async (
         },
       }
     );
+
+    const students =
+  await User.find({
+    role: "student",
+  });
+
+for (const student of students) {
+
+  await createNotification(
+    student._id.toString(),
+
+    "New Assignment",
+
+    `${assignment.title} has been posted`,
+
+    "assignment"
+  );
+
+}
+
 
     res.status(201).json({
       success: true,
