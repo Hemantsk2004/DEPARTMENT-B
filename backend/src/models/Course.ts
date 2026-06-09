@@ -15,6 +15,8 @@ export interface ICourse extends Document {
 
   announcements: Schema.Types.ObjectId[];
 
+  assignments: Schema.Types.ObjectId[];
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,6 +31,7 @@ const courseSchema = new Schema<ICourse>(
     materials: [{ type: Schema.Types.ObjectId, ref: "Material" }],
     lectures: [{type: Schema.Types.ObjectId,ref: "Lecture"}],
     announcements: [{type: Schema.Types.ObjectId,ref: "Announcement"}],
+    assignments: [{type: Schema.Types.ObjectId,ref: "Assignment"}],
   },
   { timestamps: true }
 );

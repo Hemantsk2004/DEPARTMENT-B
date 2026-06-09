@@ -12,6 +12,8 @@ import path from "path";
 import aiRoutes from "./routes/ai.routes";
 import announcementRoutes from "./routes/announcement.routes";
 import lectureRoutes from "./routes/lecture.routes";
+import assignmentRoutes from "./routes/assignment.routes";
+import submissionRoutes from "./routes/submission.routes";
 
 
 dotenv.config();
@@ -61,6 +63,8 @@ app.use("/api/portfolio", portfolioRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/announcements",announcementRoutes);
 app.use("/api/lectures",lectureRoutes);
+app.use("/api/assignments",assignmentRoutes);
+app.use("/api/submissions",submissionRoutes);
 
 // 404 handler
 app.use((_req, res) => {
