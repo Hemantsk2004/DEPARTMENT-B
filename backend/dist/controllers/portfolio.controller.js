@@ -39,8 +39,8 @@ const updatePortfolio = async (req, res) => {
             updateData.projects = JSON.parse(req.body.projects);
         }
         if (req.file) {
-            updateData.avatar =
-                `http://localhost:5000/uploads/avatars/${req.file.filename}`;
+        updateData.avatar =
+            `${process.env.BACKEND_URL}/uploads/avatars/${req.file.filename}`;
         }
         const updatedUser = await User_1.User.findByIdAndUpdate(req.user?.userId, updateData, {
             new: true,

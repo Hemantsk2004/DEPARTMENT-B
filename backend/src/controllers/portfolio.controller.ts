@@ -56,10 +56,10 @@ export const updatePortfolio = async (
       );
     }
 
-    if (req.file) {
+      if (req.file) {
         updateData.avatar =
-        `http://localhost:5000/uploads/avatars/${req.file.filename}`;
-    }
+          `${process.env.BACKEND_URL}/uploads/avatars/${req.file.filename}`;
+      }
 
     const updatedUser =
       await User.findByIdAndUpdate(
