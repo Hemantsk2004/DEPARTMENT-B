@@ -45,6 +45,7 @@ const allowedOrigins = [
   process.env.FRONTEND_URL || "https://campuslink-plg91al6h-hemantsk2004s-projects.vercel.app",
 ];
 
+console.log("FRONTEND_URL =", process.env.FRONTEND_URL);
 app.use(
   cors({
     origin: (origin, callback) => {
