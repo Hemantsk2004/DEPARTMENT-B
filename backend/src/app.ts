@@ -42,7 +42,7 @@ app.get("/", (_req, res) => {
 // CORS
 const allowedOrigins = [
   /^http:\/\/localhost:\d+$/,
-  process.env.FRONTEND_URL || "https://campuslink-plg91al6h-hemantsk2004s-projects.vercel.app",
+  process.env.FRONTEND_URL || "https://campuslink-x.vercel.app",
 ];
 
 console.log("FRONTEND_URL =", process.env.FRONTEND_URL);
