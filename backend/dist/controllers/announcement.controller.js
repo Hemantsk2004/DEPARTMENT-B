@@ -2,12 +2,21 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAnnouncements = exports.createAnnouncement = void 0;
 const Announcement_1 = require("../models/Announcement");
+const User_1 = require("../models/User");
+const createNotification_1 = require("../utils/createNotification");
 const createAnnouncement = async (req, res) => {
     try {
         const announcement = await Announcement_1.Announcement.create({
             ...req.body,
             createdBy: req.user?.userId,
         });
+        // Create notifications for all students
+        const students = await User_1.User.find({
+            role: "student",
+        });
+        for (const student of students) {
+            await (0, createNotification_1.createNotification)(student._id.toString(), "New Announcement", announcement.title, "announcement");
+        }
         res.status(201).json({
             success: true,
             data: announcement,

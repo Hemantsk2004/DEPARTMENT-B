@@ -8,6 +8,8 @@ const Material_1 = require("../models/Material");
 const Course_1 = require("../models/Course");
 const responseHandler_1 = require("../utils/responseHandler");
 const fs_1 = __importDefault(require("fs"));
+const createNotification_1 = require("../utils/createNotification");
+const User_1 = require("../models/User");
 const uploadMaterial = async (req, res) => {
     try {
         const { courseId } = req.params;
@@ -32,6 +34,12 @@ const uploadMaterial = async (req, res) => {
             uploadedBy: req.user?.userId,
         });
         await material.save();
+        const students = await User_1.User.find({
+            role: "student",
+        });
+        for (const student of students) {
+            await (0, createNotification_1.createNotification)(student._id.toString(), "New Material", `${material.title} uploaded`, "material");
+        }
         await Course_1.Course.findByIdAndUpdate(courseId, {
             $addToSet: { materials: material._id },
         });

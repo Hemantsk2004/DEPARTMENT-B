@@ -5,12 +5,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLectures = exports.createLecture = void 0;
 const Lecture_1 = __importDefault(require("../models/Lecture"));
+const User_1 = require("../models/User");
+const createNotification_1 = require("../utils/createNotification");
 const createLecture = async (req, res) => {
     try {
         const lecture = await Lecture_1.default.create({
             ...req.body,
             createdBy: req.user?.userId,
         });
+        const students = await User_1.User.find({
+            role: "student",
+        });
+        for (const student of students) {
+            await (0, createNotification_1.createNotification)(student._id.toString(), "New Lecture", lecture.title, "lecture");
+        }
         res.status(201).json({
             success: true,
             data: lecture,

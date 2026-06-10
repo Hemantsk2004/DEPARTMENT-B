@@ -11,7 +11,6 @@ dotenv_1.default.config();
 const createAdminUser = async () => {
     try {
         await mongoose_1.default.connect(process.env.MONGODB_URI);
-        auth_1.hashPassword;
         const hashedPassword = await (0, auth_1.hashPassword)("password");
         const adminUser = new User_1.User({
             name: "Admin",

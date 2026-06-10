@@ -15,10 +15,21 @@ import lectureRoutes from "./routes/lecture.routes";
 import assignmentRoutes from "./routes/assignment.routes";
 import submissionRoutes from "./routes/submission.routes";
 import notificationRoutes from "./routes/notification.routes";
-
+import studyRoomRoutes from "./routes/studyRoom.routes";
+import http from "http";
+import { Server } from "socket.io";
+import { saveMessage } from "./controllers/studyRoom.controller";
 
 dotenv.config();
 const app = express();
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 app.get("/", (_req, res) => {
   res.json({
@@ -67,7 +78,7 @@ app.use("/api/lectures",lectureRoutes);
 app.use("/api/assignments",assignmentRoutes);
 app.use("/api/submissions",submissionRoutes);
 app.use("/api/notifications",notificationRoutes);
-
+app.use("/api/study-rooms",studyRoomRoutes);
 
 // 404 handler
 app.use((_req, res) => {
@@ -84,12 +95,66 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
 // Database connection and server startup
 const PORT = process.env.PORT || 5000;
 
+io.on("connection", (socket) => {
+  console.log("User Connected:", socket.id);
+
+  socket.on(
+    "join-room",
+    (courseId: string) => {
+      socket.join(courseId);
+
+      console.log(
+        `Joined room ${courseId}`
+      );
+    }
+  );
+
+  socket.on(
+    "send-message",
+    async (data) => {
+      const {
+        courseId,
+        senderId,
+        senderName,
+        message,
+      } = data;
+
+      await saveMessage(
+        courseId,
+        senderId,
+        senderName,
+        message
+      );
+
+      io.to(courseId).emit(
+        "receive-message",
+        {
+          senderId,
+          senderName,
+          message,
+          createdAt:
+            new Date(),
+        }
+      );
+    }
+  );
+
+  socket.on(
+    "disconnect",
+    () => {
+      console.log(
+        "User disconnected"
+      );
+    }
+  );
+});
+
 mongoose
   .connect(process.env.MONGODB_URI as string)
   .then(() => {
     console.log("✅ Connected to MongoDB");
 
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
   })

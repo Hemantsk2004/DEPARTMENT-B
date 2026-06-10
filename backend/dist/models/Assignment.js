@@ -33,18 +33,35 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Course = void 0;
+exports.Assignment = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const courseSchema = new mongoose_1.Schema({
-    title: { type: String, required: true, trim: true },
-    courseCode: { type: String, required: true, unique: true, trim: true, uppercase: true },
-    description: { type: String, required: true, trim: true },
-    lecturer: { type: mongoose_1.Schema.Types.ObjectId, ref: "User", required: true },
-    students: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "User" }],
-    materials: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Material" }],
-    lectures: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Lecture" }],
-    announcements: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Announcement" }],
-    assignments: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Assignment" }],
-}, { timestamps: true });
-exports.Course = mongoose_1.default.model("Course", courseSchema);
-//# sourceMappingURL=Course.js.map
+const assignmentSchema = new mongoose_1.Schema({
+    title: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    description: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    courseId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "Course",
+        required: true,
+    },
+    createdBy: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
+    dueDate: {
+        type: Date,
+        required: true,
+    },
+}, {
+    timestamps: true,
+});
+exports.Assignment = mongoose_1.default.model("Assignment", assignmentSchema);
+//# sourceMappingURL=Assignment.js.map

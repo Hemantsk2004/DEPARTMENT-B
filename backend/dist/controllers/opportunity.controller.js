@@ -5,12 +5,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.saveOpportunity = exports.deleteOpportunity = exports.getAllOpportunities = exports.createOpportunity = void 0;
 const Opportunity_1 = __importDefault(require("../models/Opportunity"));
+const User_1 = require("../models/User");
+const createNotification_1 = require("../utils/createNotification");
 const createOpportunity = async (req, res) => {
     try {
         const opportunity = await Opportunity_1.default.create({
             ...req.body,
             createdBy: req.user?.userId,
         });
+        const users = await User_1.User.find();
+        for (const user of users) {
+            await (0, createNotification_1.createNotification)(user._id.toString(), "New Opportunity", opportunity.title, "opportunity");
+        }
         res.status(201).json({
             success: true,
             message: "Opportunity created successfully",
